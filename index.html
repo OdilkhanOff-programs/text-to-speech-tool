@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matnni Ovozga Aylantirish</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e0f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        textarea {
+            width: 90%;
+            height: 100px;
+            border: 2px solid #009688;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #009688;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #00796b;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 20px;
+            }
+            textarea {
+                font-size: 14px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Matnni Ovozga Aylantirish</h1>
+        <h1>Text to Voice</h1>
+        <select id="voice-select"></select>
+        <textarea id="text-to-speak" placeholder="Bu yerga matn kiriting...">Hello</textarea>
+        <button id="speak-button">Ovozga Aylantirish</button>
+    </div>
+
+    <script>
+        const speakButton = document.getElementById('speak-button');
+        const textToSpeak = document.getElementById('text-to-speak');
+        const voiceSelect = document.getElementById('voice-select');
+        let voices = [];
+
+        function populateVoiceList() {
+            voices = speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '';
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+
+        speakButton.addEventListener('click', () => {
+            const utterance = new SpeechSynthesisUtterance(textToSpeak.value);
+            const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+            utterance.voice = selectedVoice;
+
+            // Ovozni ijro etish
+            speechSynthesis.speak(utterance);
+        });
+    </script>
+</body>
+</html>
